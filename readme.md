@@ -97,7 +97,8 @@ Replace `<your-ec2-ip>` with your public EC2 IP.
 
 * **Service 2 (Flask):**
 
-  * `http://<your-ec2-ip>:8080/service2/`
+  * `http://<your-ec2-ip>:8080/service2/hello`
+  * `http://<your-ec2-ip>:8080/service2/ping`
 
 ---
 
