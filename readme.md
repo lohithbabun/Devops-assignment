@@ -1,101 +1,125 @@
-### 🧪 **DevOps Intern Assignment: Nginx Reverse Proxy + Docker**
 
-You are expected to set up a simple system where:
+# 🐳 Microservices Reverse Proxy with Docker, NGINX, and AWS EC2
 
-1. **Two Dockerized backend services** (can be dummy services) run on different ports.
-2. An **Nginx reverse proxy** (also in a Docker container) routes:
+This project demonstrates a simple microservices architecture using:
 
-   * `/service1` requests to backend service 1
-   * `/service2` requests to backend service 2
-3. All services must be accessible via a single port (e.g., `localhost:8080`).
+- **Go (Service 1)**
+- **Python Flask (Service 2)**
+- **NGINX reverse proxy**
+- **Docker + Docker Compose**
+- **Hosted on an Ubuntu-based AWS EC2 instance**
 
----
-
-### ✅ **Requirements**
-
-1. Use Docker Compose to bring up the entire system.
-2. Each backend service should respond with a JSON payload like:
-
-   ```json
-   {"service": "service1"}
-   ```
-3. The Nginx config should support:
-
-   * Routing based on URL path prefix (`/service1`, `/service2`)
-   * Logging incoming requests with timestamp and path
-4. The system should work with a single command:
-
-   ```bash
-   docker-compose up --build
-   ```
-5. Bonus: Add a health check for both services and show logs of successful routing.
+All services are containerized and accessible via a single NGINX entry point on port **8080**.
 
 ---
 
-### 📁 Suggested Project Structure
+## 📁 Project Structure
 
 ```
+
 .
 ├── docker-compose.yml
 ├── nginx
-│   ├── default.conf
+│   ├── nginx.conf
 │   └── Dockerfile
-├── service_1
-│   ├── app.py
+├── service\_1
+│   ├── main.go
 │   └── Dockerfile
-├── service_2
+├── service\_2
 │   ├── app.py
 │   └── Dockerfile
 └── README.md
+
+````
+
+---
+
+## ⚙️ Services Overview
+
+| Service     | Tech           | Port | Endpoint                          |
+|-------------|----------------|------|-----------------------------------|
+| Service 1   | Go (net/http)  | 8001 | `/service1/hello`, `/service1/ping` |
+| Service 2   | Python Flask   | 8002 | `/service2/`                      |
+| NGINX       | Reverse Proxy  | 8080 | Routes traffic to services        |
+
+---
+
+## 🚀 How to Run (on Ubuntu AWS EC2)
+
+### 1. 🔧 Launch EC2 Instance
+
+- Choose **Ubuntu Server** 
+- Open **port 8080** in Security Group:
+  - Inbound Rule → Custom TCP → Port 8080 → Source: `0.0.0.0/0` (or restrict to your IP)
+
+### 2. 🧰 Install Docker & Docker Compose
+
+```bash
+sudo apt update
+sudo apt install docker.io -y
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# Install Docker Compose (v2+)
+sudo apt install docker-compose -y
+````
+
+### 3. 🗂 Clone Your Project
+
+```bash
+git clone <your-repo-url>
+cd Devops-assignment
+```
+
+### 4. 🐳 Build and Run
+
+```bash
+# Start everything
+sudo docker compose up -d
+
+# Check if services are running
+sudo docker-compose ps
+
+# Tear everything down when done
+sudo docker-compose down -v
 ```
 
 ---
 
-### 📦 Tech Constraints
+## 🌐 Access the Services
 
-* Nginx must run in a Docker container, not on host
-* Use bridge networking (no host networking)
+Replace `<your-ec2-ip>` with your public EC2 IP.
 
----
+* **Service 1 (Go):**
 
-### 📝 Submission Instructions
+  * `http://<your-ec2-ip>:8080/service1/hello`
+  * `http://<your-ec2-ip>:8080/service1/ping`
 
-1. Upload your project to GitHub or GitLab.
-2. Include a short `README.md` with:
+* **Service 2 (Flask):**
 
-   * Setup instructions
-   * How routing works
-   * Any bonus you implemented
-3. Deadline: **1 week**
-4. Bonus points for:
-
-   * Logging clarity
-   * Clean and modular Docker setup
-   * Healthcheck or automated test script
+  * `http://<your-ec2-ip>:8080/service2/`
 
 ---
 
-### ❓FAQs
+## ✅ Sample Output
 
-**Q: Is this a full-time role?**
-Yes. You would need to be in office in Bangalore.
+**Service 1 – `/service1/hello`**
 
-**Q: Is there a stipend?**
-Yes. 20k INR per month
+```json
+{
+  "message": "Hello from Service 1"
+}
+```
 
-**Q: How many positions are open?**
-Two positions are open.
+**Service 2 – `/service2/hello`**
 
-**Q: I am still in college. Can I apply?**
-Unfortunately, we are looking for post-college candidates.
+```json
+{
+  "message": "Hello from  Service 2"
+}
+```
 
-**Q: Can I reach out for doubts?**
-No — due to the volume of submissions. Please use your creativity and assumptions where needed.
+---
 
-**Q: Can I use ChatGPT or Copilot?**
-Yes, feel free to use AI tools — we care about your implementation and understanding.
-
-**Q: This feels like a lot for an intern assignment.**
-We agree it’s non-trivial — we’ve received many applications, so this helps us filter based on quality.
 
 
